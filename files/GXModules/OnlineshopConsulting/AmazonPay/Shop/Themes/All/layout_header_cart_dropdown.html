@@ -1,7 +1,8 @@
 {block name="layout_header_cart_dropdown_cart_button"}
     {$smarty.block.parent}
     {block name="layout_header_cart_dropdown_cart_button_amazon_pay_button"}
-        {if 'SHOW_AMAZON_PAY_BUTTON'|defined}
+        {checkIfAmazonPayButtonIsAllowed}
+        {if $isAmazonPayButtonAllowed}
             <div class="amazon-pay-button"></div>
         {/if}
     {/block}

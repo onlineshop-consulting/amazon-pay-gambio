@@ -250,8 +250,7 @@ var OncoAmazonPay = {
     }
 }
 
-if (typeof AmazonPayConfiguration !== 'undefined'
-) {
+if (typeof AmazonPayConfiguration !== 'undefined') {
     OncoAmazonPay.boot();
 } else {
     window.onLoadAmazonPayConfiguration = () => {

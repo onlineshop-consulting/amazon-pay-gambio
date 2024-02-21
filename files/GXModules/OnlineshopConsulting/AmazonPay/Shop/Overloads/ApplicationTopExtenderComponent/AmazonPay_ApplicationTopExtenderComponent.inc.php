@@ -9,8 +9,7 @@ class AmazonPay_ApplicationTopExtenderComponent extends AmazonPay_ApplicationTop
 
         $configurationService = new \OncoAmazonPay\ConfigurationService();
         if ($configurationService->isConfigurationComplete() && $configurationService->isPaymentMethodEnabled()) {
-            define('SHOW_AMAZON_PAY_BUTTON', true);
-            if($configurationService->getConfiguration()->getButtonColorLogin()){
+            if ($configurationService->getConfiguration()->getButtonColorLogin()) {
                 define('SHOW_AMAZON_LOGIN_BUTTON', true);
             }
         }

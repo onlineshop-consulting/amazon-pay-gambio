@@ -20,7 +20,7 @@ use OncoAmazonPay\TransactionService;
 if (!class_exists('amazon_pay_ORIGIN')) {
     class amazon_pay_ORIGIN
     {
-        const VERSION = '1.1.0';
+        const VERSION = '1.1.1';
         const PLATFORM_ID = 'A2VVGKBLLUJHH1';
 
         const PAYMENT_METHOD_CODE = 'amazon_pay';
