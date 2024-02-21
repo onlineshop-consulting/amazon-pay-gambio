@@ -1,0 +1,42 @@
+{block name="checkout_confirmation_address_delivery_legend"}
+    {if $isAmazonPayCheckout}
+        <legend>
+            {$txt.text_shipping_address}
+            <a
+                    href="javascript:void(0);"
+                    id="amazon-pay-change-address"
+                    title="{$txt.text_edit|replace:" (":""|replace:")":""}"
+            >
+                <span class="fa fa-pencil"></span>
+            </a>
+        </legend>
+    {else}
+        {$smarty.block.parent}
+    {/if}
+{/block}
+
+{block name="checkout_confirmation_payment_method_content"}
+    {if $isAmazonPayCheckout}
+        <address>
+            {if $amazonPayPaymentDescriptor}
+                <div class="amazon-pay-confirmation-logo-container">
+                    <img src="{$amazonPayLogoUrl}" alt="Amazon Pay" class="amazon-pay-confirmation-logo" />
+                </div>
+                <div class="amazon-pay-payment-descriptor">
+                    {$amazonPayPaymentDescriptor}
+                    <a
+                            href="javascript:void(0);"
+                            id="amazon-pay-change-payment"
+                            title="{$txt.text_edit|replace:" (":""|replace:")":""}"
+                    >
+                        <span class="fa fa-pencil"></span>
+                    </a>
+                </div>
+            {else}
+                {$PAYMENT_METHOD}
+            {/if}
+        </address>
+    {else}
+        {$smarty.block.parent}
+    {/if}
+{/block}

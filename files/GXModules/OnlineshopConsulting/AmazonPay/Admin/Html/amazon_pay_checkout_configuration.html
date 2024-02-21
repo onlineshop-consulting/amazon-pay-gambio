@@ -1,0 +1,125 @@
+{extends file="get_usermod:layouts/main/layout.html"}
+
+{block name="content"}
+    {load_language_text section="amazon_pay"}
+    <div class="row amazon-pay-intro-container">
+        <div class="col-xs-3 col-sm-2 col-md-1">
+            <img src="{$content.urls.logo}" alt="{$txt.APC_CONFIGURATION_TITLE}" class="img-responsive"/>
+        </div>
+        <div class="col-xs-9 col-sm-10 col-md-11 amazon-pay-intro-text">
+            <div class="amazon-pay-intro-text-inner">
+                {$txt.APC_CONFIGURATION_INTRO}
+                <div>
+                    <a href="https://amazon-pay-gambio.onlineshop.consulting" target="_blank"><i class="fa fa-info-circle"></i> {$txt.APC_CONFIGURATION_HELP_LINK_CAPTION}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {function name=writeConfigurationInputField fieldName="" label="" type="text" readonly=0}
+        <div class="form-group">
+            <label class="col-sm-4 control-label" for="{$fieldName}_input">{$txt.$label}</label>
+            <div class="col-sm-8" {if $type=='bool'} data-gx-widget="switcher" {/if}>
+                {if $type == 'text'}
+                    <input type="{$type}" {if $readonly}readonly{/if} id="{$fieldName}_input" class="form-control" name="configuration[{$fieldName}]"/>
+                {elseif $type == 'textarea'}
+                    <textarea id="{$fieldName}_input" {if $readonly}readonly{/if} class="form-control" name="configuration[{$fieldName}]"></textarea>
+                {elseif $type == 'select'}
+                    <select class="form-control" id="{$fieldName}_input" name="configuration[{$fieldName}]">
+                        {foreach from=$options item=option}
+                            <option value="{$option.value}">{$option.label}</option>
+                        {/foreach}
+                    </select>
+                {elseif $type == 'bool'}
+                    <input type="hidden" name="configuration[{$fieldName}]" value="0"/>
+                    <input type="checkbox" id="{$fieldName}_input" value="1" name="configuration[{$fieldName}]" class="form-control"/>
+                {/if}
+            </div>
+        </div>
+    {/function}
+    <form action="{$content.urls.saveConfiguration}" data-load-url="{$content.urls.getConfiguration}" data-reset-key-url="{$content.urls.resetKey}" method="POST" class="form-configuration amazon-pay-configuration" id="amazon-pay-configuration-form">
+        <input type="hidden" name="page_token" value="{$pageToken}">
+        <div class="form-horizontal">
+            <fieldset>
+                <legend>{$txt.APC_CONFIGURATION_CREDENTIALS_HEADING}</legend>
+                <div class="group-intro">
+                    {$txt.APC_CONFIGURATION_CREDENTIALS_INTRO}
+                </div>
+                {writeConfigurationInputField fieldName="merchantId" label="APC_MERCHANT_ID_TITLE"}
+                {writeConfigurationInputField fieldName="clientId" label="APC_CLIENT_ID_TITLE"}
+                {writeConfigurationInputField fieldName="publicKey" label="APC_PUBLIC_KEY_TITLE" type=textarea readonly=1}
+                <div>
+                    <a href="#" class="btn btn-default" data-action="reset-key">{$txt.APC_RESET_KEY_TITLE}</a>
+                </div>
+                {writeConfigurationInputField fieldName="publicKeyId" label="APC_PUBLIC_KEY_ID_TITLE"}
+            </fieldset>
+
+            <fieldset>
+                <legend>{$txt.APC_CONFIGURATION_TESTING_HEADING}</legend>
+                <div class="group-intro">
+                    {$txt.APC_CONFIGURATION_TESTING_INTRO}
+                </div>
+                {writeConfigurationInputField fieldName="status" label="APC_STATUS_TITLE" type="bool"}
+                {writeConfigurationInputField fieldName="isSandbox" label="APC_IS_SANDBOX_TITLE" type="bool"}
+                {writeConfigurationInputField fieldName="isHidden" label="APC_IS_HIDDEN_TITLE" type="bool"}
+                {writeConfigurationInputField fieldName="logLevel" label="APC_LOG_LEVEL_TITLE" type="select" options=$content.options.logLevel}
+            </fieldset>
+
+            <fieldset>
+                <legend>{$txt.APC_CONFIGURATION_IPN_HEADING}</legend>
+                <div class="group-intro">
+                    {$txt.APC_CONFIGURATION_IPN_INTRO}
+                </div>
+                {writeConfigurationInputField fieldName="ipnUrl" label="APC_IPN_URL_TITLE"}
+            </fieldset>
+
+            <fieldset>
+                <legend>{$txt.APC_CONFIGURATION_STYLE_HEADING}</legend>
+                <div class="group-intro">
+                    {$txt.APC_CONFIGURATION_STYLE_INTRO}
+                </div>
+                {writeConfigurationInputField fieldName="buttonColorCheckout" label="APC_CHECKOUT_BUTTON_COLOR_TITLE" type="select" options=$content.options.checkoutButtonColor}
+                {writeConfigurationInputField fieldName="showButtonOnProductPage" label="APC_SHOW_BUTTON_ON_PDP" type="bool"}
+                {writeConfigurationInputField fieldName="buttonColorLogin" label="APC_LOGIN_BUTTON_COLOR_TITLE" type="select" options=$content.options.loginButtonColor}
+            </fieldset>
+
+            <fieldset>
+                <legend>{$txt.APC_CONFIGURATION_AUTOMATION_HEADING}</legend>
+                <div class="group-intro">
+                    {$txt.APC_CONFIGURATION_AUTOMATION_INTRO}
+                </div>
+                {writeConfigurationInputField fieldName="captureMode" label="APC_CAPTURE_MODE_TITLE" type="select" options=$content.options.captureMode}
+                {writeConfigurationInputField fieldName="canHandlePendingAuthorization" label="APC_CAN_HANDLE_PENDING" type="bool"}
+            </fieldset>
+
+            <fieldset>
+                <legend>{$txt.APC_CONFIGURATION_STATUS_TRIGGER_HEADING}</legend>
+                <div class="group-intro">
+                    {$txt.APC_CONFIGURATION_STATUS_TRIGGER_INTRO}
+                </div>
+                {writeConfigurationInputField fieldName="orderStatusTriggerCapture" label="APC_ORDER_STATUS_TRIGGER_CAPTURE_TITLE" type="select" options=$content.options.orderStatusTrigger}
+                {writeConfigurationInputField fieldName="orderStatusTriggerRefund" label="APC_ORDER_STATUS_TRIGGER_REFUND_TITLE" type="select" options=$content.options.orderStatusTrigger}
+            </fieldset>
+
+
+
+            <fieldset>
+                <legend>{$txt.APC_CONFIGURATION_SET_STATUS_HEADING}</legend>
+                <div class="group-intro">
+                    {$txt.APC_CONFIGURATION_SET_STATUS_INTRO}
+                </div>
+                {writeConfigurationInputField fieldName="orderStatusAuthorized" label="APC_ORDER_STATUS_AUTHORIZED_TITLE" type="select" options=$content.options.orderStatus}
+                {writeConfigurationInputField fieldName="orderStatusCapturedCompletely" label="APC_ORDER_STATUS_CAPTURED_COMPLETELY_TITLE" type="select" options=$content.options.orderStatus}
+                {writeConfigurationInputField fieldName="orderStatusCapturedPartly" label="APC_ORDER_STATUS_CAPTURED_PARTLY_TITLE" type="select" options=$content.options.orderStatus}
+                {writeConfigurationInputField fieldName="orderStatusRefundedCompletely" label="APC_ORDER_STATUS_REFUNDED_COMPLETELY_TITLE" type="select" options=$content.options.orderStatus}
+                {writeConfigurationInputField fieldName="orderStatusRefundedPartly" label="APC_ORDER_STATUS_REFUNDED_PARTLY_TITLE" type="select" options=$content.options.orderStatus}
+                {writeConfigurationInputField fieldName="orderStatusFailed" label="APC_ORDER_STATUS_FAILED_TITLE" type="select" options=$content.options.orderStatus}
+            </fieldset>
+
+
+        </div>
+        <div class="col-sm-12">
+            <button type="submit" class="btn btn-primary pull-right">{$txt.APC_CONFIGURATION_SAVE}</button>
+        </div>
+    </form>
+{/block}

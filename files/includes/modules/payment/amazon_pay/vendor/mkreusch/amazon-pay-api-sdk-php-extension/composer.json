@@ -1,0 +1,14 @@
+{
+  "name": "mkreusch/amazon-pay-api-sdk-php-extension",
+  "description": "Add a convenience layer to the Amazon Pay PHP SDK",
+  "version": "0.4.0",
+  "require": {
+    "php": ">=5.5.0",
+    "amzn/amazon-pay-api-sdk-php": ">=2.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "AmazonPayApiSdkExtension\\": "/"
+    }
+  }
+}

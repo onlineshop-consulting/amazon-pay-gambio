@@ -1,0 +1,74 @@
+.amazon-pay-intro-container {
+    font-size: 1.2em;
+}
+
+.amazon-pay-intro-container {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.amazon-pay-configuration.form-configuration .form-horizontal fieldset {
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    margin: 0 0 20px 0;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12);
+    padding: 12px;
+}
+
+.amazon-pay-configuration.form-configuration .form-horizontal fieldset legend {
+    padding: 0 0 10px 0;
+    font-size: 1.8em;
+    font-weight: normal;
+    color: inherit;
+    border-width: 0;
+    float: left;
+}
+
+.amazon-pay-configuration.form-configuration .form-horizontal fieldset .form-group {
+    padding: 8px 0;
+}
+
+.amazon-pay-configuration.form-configuration .form-horizontal fieldset .form-group > label.control-label {
+    display: block;
+    float: none;
+    width: 100%;
+}
+
+.amazon-pay-configuration.form-configuration .form-horizontal fieldset .form-group > div {
+    display: block;
+    float: none;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.amazon-pay-configuration.form-configuration .form-horizontal fieldset .form-group > div input.form-control,
+.amazon-pay-configuration.form-configuration .form-horizontal fieldset .form-group > div textarea.form-control,
+.amazon-pay-configuration.form-configuration .form-horizontal fieldset .form-group > div select.form-control {
+    display: block;
+    float: none;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    max-width: none;
+    border:none;
+    border-bottom:1px solid #ddd;
+    box-shadow: none;
+    font-size: 1.3em;
+    color:inherit;
+    border-radius:0;
+}
+
+.amazon-pay-configuration.form-configuration .form-horizontal fieldset .form-group > div input.form-control:focus,
+.amazon-pay-configuration.form-configuration .form-horizontal fieldset .form-group > div textarea.form-control:focus,
+.amazon-pay-configuration.form-configuration .form-horizontal fieldset .form-group > div select.form-control:focus {
+    border-bottom:2px solid #002337;
+    outline: 0;
+}
+
+.amazon-pay-configuration [name="configuration[publicKey]"]{
+    height: 14em;
+    font-family: monospace;
+}

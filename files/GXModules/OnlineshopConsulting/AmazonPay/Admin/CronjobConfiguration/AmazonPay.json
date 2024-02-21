@@ -1,0 +1,58 @@
+{
+  "name": "Amazon Pay",
+  "title": "cronjob_amazon_pay.cronjob_label",
+  "configuration": {
+    "active": {
+      "name": "active",
+      "type": "checkbox",
+      "label": "cronjob_amazon_pay.cronjob_label_activate",
+      "defaultValue": false
+    },
+    "interval": {
+      "name": "interval",
+      "type": "select",
+      "label": "cronjob_amazon_pay.label_configure_interval",
+      "defaultValue": "0 0 * * *",
+      "values": [
+        {
+          "value": "* * * * *",
+          "text": "cronjob_amazon_pay.every_minute"
+        },
+        {
+          "value": "*/5 * * * *",
+          "text": "cronjob_amazon_pay.every_5_minutes"
+        },
+        {
+          "value": "*/15 * * * *",
+          "text": "cronjob_amazon_pay.every_15_minutes"
+        },
+        {
+          "value": "0 */1 * * *",
+          "text": "cronjob_amazon_pay.every_hour"
+        },
+        {
+          "value": "0 */3 * * *",
+          "text": "cronjob_amazon_pay.every_3_hours"
+        },
+        {
+          "value": "0 */6 * * *",
+          "text": "cronjob_amazon_pay.every_6_hours"
+        },
+        {
+          "value": "0 */12 * * *",
+          "text": "cronjob_amazon_pay.every_12_hours"
+        },
+        {
+          "value": "0 0 * * *",
+          "text": "cronjob_amazon_pay.every_24_hours"
+        }
+      ]
+    },
+    "sortOrder": {
+      "name": "sort-order",
+      "type": "hidden",
+      "label": "",
+      "defaultValue": "10"
+    }
+  }
+}

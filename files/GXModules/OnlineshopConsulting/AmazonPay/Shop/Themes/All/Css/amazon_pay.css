@@ -1,0 +1,43 @@
+.amazon-pay-button{
+    position: relative;
+    min-height: 42px;
+    width: 100% !important;
+    margin-left: auto;
+    margin-right: auto;
+    max-width:600px;
+}
+
+.login-page-amazon-pay-button-container{
+    width:100%;
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.cart-dropdown .amazon-pay-button{
+    margin-top: 10px;
+}
+
+.amazon-pay-confirmation-logo{
+    max-width:150px;
+    margin-bottom:10px;
+}
+
+.amazon-pay-button-pdp-container{
+    padding:0 15px;
+    margin-bottom:30px;
+    margin-top: 10px;
+}
+
+
+#cart_quantity * + .amazon-pay-button{
+    margin-top: 10px;
+}
+
+.dropdown-sso + .amazon-login-button{
+    margin-top: 10px;
+}
+
+.shopping-cart-button .amazon-pay-button{
+    margin-top: 10px;
+}

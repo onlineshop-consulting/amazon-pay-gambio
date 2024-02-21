@@ -1,0 +1,14 @@
+{block name="login_form"}
+    {$smarty.block.parent}
+    {if 'SHOW_AMAZON_PAY_BUTTON'|defined}
+        {if $smarty.get.checkout_started === "1"}
+            <div class="login-page-amazon-pay-button-container">
+                <div class="amazon-pay-button"></div>
+            </div>
+        {elseif 'SHOW_AMAZON_LOGIN_BUTTON'|defined}
+            <div class="login-page-amazon-pay-button-container">
+                <div class="amazon-login-button"></div>
+            </div>
+        {/if}
+    {/if}
+{/block}

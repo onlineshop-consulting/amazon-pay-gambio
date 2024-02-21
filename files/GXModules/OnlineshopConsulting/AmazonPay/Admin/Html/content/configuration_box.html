@@ -1,0 +1,8 @@
+{block name="admin_configuration_box_header"}
+    {$smarty.block.parent}
+    {if $content_data.additionalContent}
+        <div class="configuration-box-additional-content">
+            {$content_data.additionalContent}
+        </div>
+    {/if}
+{/block}

@@ -1,0 +1,50 @@
+#admin-amazon-pay-transactions .meta-infos{
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+#admin-amazon-pay-transactions .meta-infos .item{
+    background:#eee;
+    padding:20px;
+    white-space: nowrap;
+    font-size:1.2em;
+}
+
+#admin-amazon-pay-transactions .meta-infos .item .value{
+    display: inline;
+}
+
+#admin-amazon-pay-transactions .action-group{
+    display: flex;
+    gap:5px;
+}
+
+#admin-amazon-pay-transactions .action-group input{
+    max-width:120px;
+    text-align: right;
+}
+
+#admin-amazon-pay-transactions .action-group button{
+    white-space: nowrap;
+}
+
+.transaction-status-RefundInitiated td,
+.transaction-status-Authorized td{
+    background: #ccecff;
+}
+
+
+.transaction-status-Refunded td,
+.transaction-status-Captured td
+{
+    background: #c5ffa4;
+}
+
+.transaction-row-Refund .amount{
+    color: #cc0000;
+}
+
+#admin-amazon-pay-transactions .refresh-button{
+    margin:10px 0 0 0;
+}

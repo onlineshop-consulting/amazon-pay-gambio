@@ -1,0 +1,89 @@
+{block name="amazon_pay_transactions"}
+    {load_language_text section="amazon_pay"}
+    {block name="amazon_pay_transactions_head"}
+        {if $chargePermission}
+            <div class="meta-infos">
+                <div class="item">
+                    <i class="fa fa-hashtag"></i>
+                    <div class="value" title="amazon_pay"> {$chargePermission.reference} </div>
+                </div>
+
+                <div class="item">
+                    <i class="fa fa-money"></i>
+                    <div class="value">{$chargePermission.amount|number_format:2:',':'.'} {$chargePermission.currency}</div>
+                </div>
+
+                <div class="item">
+                    <i class="fa fa-calendar"></i>
+                    <div class="value">{$chargePermission.time} </div>
+                </div>
+
+                <div class="item">
+                    <i class="fa fa-flag-o"></i>
+                    <div class="value">{$chargePermission.status} </div>
+                </div>
+            </div>
+        {/if}
+    {/block}
+    {block name="amazon_pay_transactions_table"}
+        <table>
+            <thead>
+
+            </thead>
+            <tbody>
+            {foreach from=$transactions item=transaction}
+                <tr class="transaction-row-{$transaction.type} transaction-status-{$transaction.status}">
+                    <td>
+                        {$transaction.reference}
+                    </td>
+                    <td>
+                        {$transaction.type}
+                    </td>
+                    <td class="amount">
+                        {if $transaction.type == 'Refund'}
+                            -
+                        {/if}
+                        {if $transaction.type !== 'ChargePermission' && $transaction.captured_amount}
+                            {$transaction.captured_amount|number_format:2:',':'.'} {$transaction.currency}
+                        {else}
+                            {$transaction.amount|number_format:2:',':'.'} {$transaction.currency}
+                        {/if}
+                    </td>
+                    <td>
+                        {$transaction.time}
+                    </td>
+                    <td>
+                        {$transaction.expiration}
+                    </td>
+                    <td>
+                        {$transaction.status}
+                    </td>
+                    <td class="actions">
+                        {if $transaction.type == 'Charge' && $transaction.status === 'Authorized'}
+                            <div class="action-group" data-action="capture" data-transaction="{$transaction.reference}">
+                                <input type="number" step="0.01" min="0" class="form-control" value="{$transaction.amount}" />
+                                <button class="button">Betrag einziehen</button>
+                            </div>
+                        {elseif $transaction.type == 'Charge' && $transaction.status === 'Captured'}
+                            {$refundAmount = $transaction.captured_amount - $transaction.refunded_amount}
+                            <div class="action-group" data-action="refund" data-transaction="{$transaction.reference}">
+                                <input type="number" step="0.01" min="0" class="form-control" value="{$refundAmount}" />
+                                <button class="button">Betrag erstatten</button>
+                            </div>
+                        {elseif $transaction.type == 'ChargePermission' && $transaction.status === 'Chargeable'}
+                            {$chargeAmount = $transaction.amount - $transaction.captured_amount}
+                            <div class="action-group" data-action="authorize" data-transaction="{$transaction.reference}">
+                                <input type="number" step="0.01" min="0" class="form-control" value="{$chargeAmount}" />
+                                <button class="button">Betrag autorisieren</button>
+                            </div>
+                        {/if}
+                    </td>
+                </tr>
+            {/foreach}
+            </tbody>
+        </table>
+    {/block}
+    {block name="amazon_pay_transactions_actions"}
+        <button class="button refresh-button" data-action="refresh">Alle aktualisieren</button>
+    {/block}
+{/block}

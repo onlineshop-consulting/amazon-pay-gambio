@@ -1,0 +1,18 @@
+{block name="checkout_shipping_form_address_no_amazon_address_change"}
+    {if $isAmazonPayCheckout}
+        <a class="btn btn-default btn-sm" href="javascript:void()" id="amazon-pay-change-address">
+            {$txt.text_address_change}
+        </a>
+        {block name="checkout_shipping_form_address_no_amazon_parcelshopfinder_if"}
+            {if $url_parcelshopfinder}
+                {block name="checkout_shipping_form_address_no_amazon_parcelshopfinder"}
+                    <span class="parcel-finder-notice">
+					    {$parcelshopfinder.note_for_button_to_psf}
+					</span>
+                {/block}
+            {/if}
+        {/block}
+    {else}
+        {$smarty.block.parent}
+    {/if}
+{/block}
