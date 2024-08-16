@@ -15,7 +15,7 @@ class AmazonPay_ConfigurationBoxContentView extends AmazonPay_ConfigurationBoxCo
             $this->set_content_data(
                 'additionalContent',
                 '<div>v' . $configurationService->getPluginVersion() . '</div>' .
-                '<a href="' . xtc_href_link('admin.php', 'do=AmazonPayCheckoutConfiguration') . '" class="button" style="margin:10px 0;">' . APC_CONFIGURATION_TITLE . '</a>'
+                '<a href="' . xtc_href_link('admin.php', 'do=AmazonPayCheckoutConfiguration') . '" class="button" style="margin:10px 0;">' . (defined('APC_CONFIGURATION_TITLE') ? APC_CONFIGURATION_TITLE : 'Konfigurieren') . '</a>'
             );
         }
     }

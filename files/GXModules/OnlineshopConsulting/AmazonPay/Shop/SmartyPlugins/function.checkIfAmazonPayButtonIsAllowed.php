@@ -5,9 +5,12 @@ function smarty_function_checkIfAmazonPayButtonIsAllowed($params, &$smarty)
     if(!class_exists('\OncoAmazonPay\ConfigurationService')){
         return;
     }
+
     $result = false;
     $configurationService = new \OncoAmazonPay\ConfigurationService();
+
     if ($configurationService->isConfigurationComplete() && $configurationService->isPaymentMethodEnabled()) {
+        (new \OncoAmazonPay\CheckoutService())->doOptionalCartCheck();
         try{
             if (isset($_SESSION['allow_checkout']) && $_SESSION['allow_checkout'] === 'false') {
                 throw new Exception('Checkout is not allowed');
@@ -21,5 +24,6 @@ function smarty_function_checkIfAmazonPayButtonIsAllowed($params, &$smarty)
             //silent
         }
     }
+
     $smarty->assign('isAmazonPayButtonAllowed', $result);
 }

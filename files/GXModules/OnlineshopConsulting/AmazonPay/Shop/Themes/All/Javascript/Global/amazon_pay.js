@@ -1,6 +1,6 @@
 var OncoAmazonPay = {
     payButtonCount: 0,
-    debugMode: true,
+    debugMode: false,
     boot: function () {
         if (AmazonPayConfiguration.localButtonHtml) {
             OncoAmazonPay.registerCheckoutButtons();
@@ -195,7 +195,7 @@ var OncoAmazonPay = {
             const buttons = document.querySelectorAll('.amazon-login-button');
             for (let i = 0; i < buttons.length; i++) {
                 const button = buttons[i];
-                if (!button.id) {
+                if (!button.shadowRoot) {
                     const id = 'amazon-login-button-' + OncoAmazonPay.payButtonCount++;
                     button.id = id;
                     amazon.Pay.renderButton('#' + id, {
@@ -219,6 +219,7 @@ var OncoAmazonPay = {
                 console.warn(e);
             }
         }
+        setTimeout(OncoAmazonPay.registerLoginButtons, 1000);
     },
     registerGambioEvents: function () {
         if(typeof $ === 'undefined') {

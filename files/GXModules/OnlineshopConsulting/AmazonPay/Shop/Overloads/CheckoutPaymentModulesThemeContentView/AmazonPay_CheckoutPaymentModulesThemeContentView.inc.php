@@ -1,11 +1,13 @@
 <?php
 
+use OncoAmazonPay\Utils;
+
 class AmazonPay_CheckoutPaymentModulesThemeContentView extends AmazonPay_CheckoutPaymentModulesThemeContentView_parent
 {
     public function prepare_data()
     {
         parent::prepare_data();
-        if ($_SESSION['payment'] === amazon_pay_ORIGIN::PAYMENT_METHOD_CODE && !empty($_SESSION['amazonCheckoutSessionId'])) {
+        if (Utils::isAmazonPayCheckout()) {
             $content = $this->get_content_array();
             foreach ($content['module_content'] as $key => $module) {
                 if ($module['id'] === amazon_pay_ORIGIN::PAYMENT_METHOD_CODE) {

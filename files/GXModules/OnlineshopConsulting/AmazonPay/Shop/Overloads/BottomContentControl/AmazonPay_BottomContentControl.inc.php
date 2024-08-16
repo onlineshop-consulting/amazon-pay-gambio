@@ -8,7 +8,12 @@ class AmazonPay_BottomContentControl extends AmazonPay_BottomContentControl_pare
     public function proceed($p_close_db_connection = true)
     {
         parent::proceed($p_close_db_connection);
+
         $configurationService = new ConfigurationService();
+        if (!($configurationService->isConfigurationComplete() && $configurationService->isPaymentMethodEnabled())) {
+            return;
+        }
+
         $configuration = $configurationService->getConfiguration();
         $outputArray = $configurationService->getPublicConfigurationArray();
         if (!empty($_SESSION['amazonCheckoutSessionId'])) {

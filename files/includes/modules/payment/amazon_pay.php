@@ -20,7 +20,7 @@ use OncoAmazonPay\TransactionService;
 if (!class_exists('amazon_pay_ORIGIN')) {
     class amazon_pay_ORIGIN
     {
-        const VERSION = '1.1.1';
+        const VERSION = '1.1.2';
         const PLATFORM_ID = 'A2VVGKBLLUJHH1';
 
         const PAYMENT_METHOD_CODE = 'amazon_pay';
@@ -222,10 +222,10 @@ if (!class_exists('amazon_pay_ORIGIN')) {
         public function check()
         {
             if (!isset ($this->_check)) {
-                if (TABLE_CONFIGURATION === 'configuration') {
-                    $check_query = xtc_db_query("SELECT configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_PAYMENT_AMAZON_PAY_STATUS'");
+                if (ConfigurationService::isOldConfigTable()) {
+                    $check_query = xtc_db_query("SELECT configuration_value FROM configuration WHERE configuration_key = 'MODULE_PAYMENT_AMAZON_PAY_STATUS'");
                 } else {
-                    $check_query = xtc_db_query("SELECT value FROM " . TABLE_CONFIGURATION . " WHERE `key` = 'configuration/MODULE_PAYMENT_AMAZON_PAY_STATUS'");
+                    $check_query = xtc_db_query("SELECT value FROM gx_configurations WHERE `key` = 'configuration/MODULE_PAYMENT_AMAZON_PAY_STATUS'");
                 }
                 $this->_check = xtc_db_num_rows($check_query);
             }
@@ -245,7 +245,7 @@ if (!class_exists('amazon_pay_ORIGIN')) {
 
             foreach ($values as $key => $data) {
                 try {
-                    if (TABLE_CONFIGURATION === 'configuration') {
+                    if (ConfigurationService::isOldConfigTable()) {
                         //legacy
                         if (isset($data['type'])) {
                             if ($data['type'] === 'switcher') {
@@ -257,7 +257,7 @@ if (!class_exists('amazon_pay_ORIGIN')) {
                             unset($data['type']);
                         }
                         DbAdapter::insert(
-                            TABLE_CONFIGURATION,
+                            'configuration',
                             [
                                 'configuration_key' => $key,
                                 'configuration_value' => $data['value'],
@@ -268,7 +268,7 @@ if (!class_exists('amazon_pay_ORIGIN')) {
                         );
                     } else {
                         DbAdapter::insert(
-                            TABLE_CONFIGURATION,
+                            'gx_configurations',
                             [
                                 'key' => 'configuration/' . $key,
                                 'value' => $data['value'],
@@ -289,16 +289,16 @@ if (!class_exists('amazon_pay_ORIGIN')) {
 
         public function remove()
         {
-            if (TABLE_CONFIGURATION === 'configuration') {
-                xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE `configuration_key` IN ('" . implode("', '", $this->keys()) . "')");
+            if (ConfigurationService::isOldConfigTable()) {
+                xtc_db_query("DELETE FROM configuration WHERE `configuration_key` IN ('" . implode("', '", $this->keys()) . "')");
             } else {
-                xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE `key` IN ('" . implode("', '", $this->keys()) . "')");
+                xtc_db_query("DELETE FROM gx_configurations WHERE `key` IN ('" . implode("', '", $this->keys()) . "')");
             }
         }
 
         public function keys(): array
         {
-            if (TABLE_CONFIGURATION === 'configuration') {
+            if (ConfigurationService::isOldConfigTable()) {
                 return [
                     'MODULE_PAYMENT_AMAZON_PAY_STATUS',
                     'MODULE_PAYMENT_AMAZON_PAY_ALLOWED',

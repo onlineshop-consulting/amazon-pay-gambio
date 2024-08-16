@@ -13,11 +13,23 @@ use AmazonPayApiSdkExtension\Struct\PaymentDetails;
 use AmazonPayApiSdkExtension\Struct\Price;
 use AmazonPayApiSdkExtension\Struct\WebCheckoutDetails;
 use Exception;
+use MainFactory;
 use order_ORIGIN;
 
 class CheckoutService
 {
 
+    public static $isCartChecked = false;
+
+    public static function setCartChecked()
+    {
+        self::$isCartChecked = true;
+    }
+
+    public static function isCartChecked(): bool
+    {
+        return self::$isCartChecked;
+    }
 
     /**
      * @var ConfigurationService
@@ -106,33 +118,34 @@ class CheckoutService
 
     }
 
-    public function getAmountOfCurrentPendingOrder(){
+    public function getAmountOfCurrentPendingOrder()
+    {
         $this->logService->debug('::getAmountOfCurrentPendingOrder start');
         $amount = null;
-        if(empty($GLOBALS['order'])){
+        if (empty($GLOBALS['order'])) {
             $GLOBALS['order'] = new \order();
         }
         if (empty($GLOBALS['order_total_modules'])) {
             $GLOBALS['order_total_modules'] = new \order_total();
             $orderTotalResult = $GLOBALS['order_total_modules']->process();
-            $this->logService->debug('::getAmountOfCurrentOrder - new order total modules', ['result'=>$orderTotalResult]);
+            $this->logService->debug('::getAmountOfCurrentOrder - new order total modules', ['result' => $orderTotalResult]);
         } else {
             if (!empty($GLOBALS['ot_total']) && is_object($GLOBALS['ot_total']) && empty($GLOBALS['ot_total']->output)) {
                 $orderTotalResult = $GLOBALS['order_total_modules']->process();
-                $this->logService->debug('::getAmountOfCurrentOrder - process existing order total modules', ['result'=>$orderTotalResult]);
-            }else{
-                $this->logService->debug('::getAmountOfCurrentOrder - order total modules had been processed', ['result'=>$GLOBALS['ot_total']]);
+                $this->logService->debug('::getAmountOfCurrentOrder - process existing order total modules', ['result' => $orderTotalResult]);
+            } else {
+                $this->logService->debug('::getAmountOfCurrentOrder - order total modules had been processed', ['result' => $GLOBALS['ot_total']]);
             }
         }
-        if(!empty($orderTotalResult) && is_array($orderTotalResult)){
-            foreach ($orderTotalResult as $orderTotal){
-                if($orderTotal['code'] === 'ot_total'){
+        if (!empty($orderTotalResult) && is_array($orderTotalResult)) {
+            foreach ($orderTotalResult as $orderTotal) {
+                if ($orderTotal['code'] === 'ot_total') {
                     $amount = $orderTotal['value'];
                 }
             }
 
         }
-        if(empty($amount)) {
+        if (empty($amount)) {
             $amount = $GLOBALS['order']->info['total'];
         }
         return $amount;
@@ -213,5 +226,32 @@ class CheckoutService
             $chargePermissionId,
             ['merchantMetadata' => ['merchantReferenceId' => $orderId]]
         );
+    }
+
+    public function doOptionalCartCheck()
+    {
+        global $xtPrice;
+        if (self::isCartChecked()){
+            return;
+        }
+        try {
+            $_SESSION['allow_checkout'] = 'true';
+            $minAmount = $_SESSION['customers_status']['customers_status_min_order'];
+            $maxAmount = $_SESSION['customers_status']['customers_status_max_order'];
+            if($minAmount > 0 || $maxAmount > 0){
+                $totalForMinMaxOrder = $_SESSION['cart']->getTotalForMinMaxOrder();
+                $minAmount = $xtPrice->xtcCalculateCurr($minAmount);
+                $maxAmount = $xtPrice->xtcCalculateCurr($maxAmount);
+                if($totalForMinMaxOrder < $minAmount){
+                    $_SESSION['allow_checkout'] = 'false';
+                }
+                if($maxAmount > 0 && $totalForMinMaxOrder > $maxAmount){
+                    $_SESSION['allow_checkout'] = 'false';
+                }
+            }
+        }catch(Exception $e){
+            $this->logService->error('cart check failed: '.$e->getMessage(), ['trace'=>$e->getTrace()]);
+        }
+        self::setCartChecked();
     }
 }

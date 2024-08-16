@@ -74,7 +74,11 @@ class ConfigurationService
     protected function checkKey()
     {
         if (empty($this->getConfiguration()->getKeyFileName())) {
-            $this->resetKey();
+            try {
+                $this->resetKey();
+            } catch (Exception $e) {
+                $this->logger->error('Could not reset key', ['exception' => $e, 'trace'=>$e->getTrace()]);
+            }
         }
     }
 
@@ -85,7 +89,6 @@ class ConfigurationService
     {
         $this->logger->debug('reset key', ['trace' => debug_backtrace(8)]);
         $configuration = $this->getConfiguration();
-        //TODO create and save new key filename
         $rsaService = new RSA();
         if (!($keys = $rsaService->createKey(2048))) {
             throw new Exception('Could not create key pair');
@@ -117,17 +120,21 @@ class ConfigurationService
         $this->configuration = $configuration;
     }
 
+    public static function isOldConfigTable(): bool
+    {
+        if (defined('TABLE_CONFIGURATION') && TABLE_CONFIGURATION === 'configuration') {
+            $q = "SHOW TABLES LIKE 'configuration'";
+            $result = xtc_db_query($q);
+            return xtc_db_num_rows($result) > 0;
+        }
+        return false;
+    }
+
     public function saveShopConfigurationValue($key, $value)
     {
-        $isOldConfigTable = false;
-        if(TABLE_CONFIGURATION === 'configuration'){
-            //check if table exists
-            $q = "SHOW TABLES LIKE '" . TABLE_CONFIGURATION . "'";
-            $result = xtc_db_query($q);
-            $isOldConfigTable = xtc_db_num_rows($result) > 0;
-        }
-        if ($isOldConfigTable) {
-            $q = "INSERT INTO " . TABLE_CONFIGURATION . " SET
+
+        if (self::isOldConfigTable()) {
+            $q = "INSERT INTO configuration SET
                 `configuration_key` = ?,
                 `configuration_value` = ?
                 ON DUPLICATE KEY UPDATE
@@ -139,10 +146,10 @@ class ConfigurationService
             }
 
             //GX4.4 had no unique key on configuration table, so we need to delete the old value first
-            $q = "DELETE FROM " . TABLE_CONFIGURATION . " WHERE `key` = ?";
+            $q = "DELETE FROM gx_configurations WHERE `key` = ?";
             DbAdapter::execute($q, [$key]);
 
-            $q = "INSERT INTO " . TABLE_CONFIGURATION . " SET
+            $q = "INSERT INTO gx_configurations SET
                 `key` = ?,
                 `value` = ?
                 ON DUPLICATE KEY UPDATE
@@ -242,9 +249,9 @@ class ConfigurationService
 
     public function updateConfigurationValue($key, $value)
     {
-        if (TABLE_CONFIGURATION === 'configuration') {
+        if (self::isOldConfigTable()) {
             xtc_db_perform(
-                TABLE_CONFIGURATION,
+                'configuration',
                 [
                     'configuration_value' => $value,
                 ],
@@ -253,7 +260,7 @@ class ConfigurationService
             );
         } else {
             xtc_db_perform(
-                TABLE_CONFIGURATION,
+                'gx_configurations',
                 [
                     'value' => $value,
                 ],
